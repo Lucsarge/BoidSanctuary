@@ -19,6 +19,7 @@ public class BoidScript : MonoBehaviour
     //  Movement Variables
     float moveSpeed = 5;
 
+    Color projectionColor = Color.white;
 
     // Start is called before the first frame update
     void Start()
@@ -44,15 +45,16 @@ public class BoidScript : MonoBehaviour
     void Move()
     {
         //  Inch forward
-        transform.Translate(this.transform.forward * moveSpeed * Time.deltaTime);
+        transform.Translate(this.transform.forward * moveSpeed * Time.deltaTime, Space.World);
     }
 
     //  Manuevers the boid in the correct direction based on the good path found in check for obstacles
     void Turn(Vector3 direction)
     {
-        direction = direction.normalized;
-        this.transform.Rotate(direction.x, direction.y, 0);
-        //this.transform.Rotate(0,15*Time.deltaTime,0);
+        //  Works but I need to increase the number of rays to (hopefully) create a smoother rotate
+        Quaternion rotateTo = Quaternion.FromToRotation(this.transform.forward, direction);
+        print(rotateTo);
+        transform.localRotation *= Quaternion.Lerp(this.transform.rotation, rotateTo, Time.deltaTime);
     }
 
     //  Casts rays to check the surroundings of the boid, while taking in the local forward vector
@@ -63,17 +65,18 @@ public class BoidScript : MonoBehaviour
         viewRays = new Ray[]{
             //new Ray(endOfBoid, f),                          //  Forward
             new Ray(endOfBoid, f - transform.right),        //  Forward Left
-            new Ray(endOfBoid, f + transform.right),        //  Forward Right
             new Ray(endOfBoid, f + transform.up),           //  Forward Up
+            new Ray(endOfBoid, f + transform.right),        //  Forward Right
             new Ray(endOfBoid, f - transform.up),           //  Forward Down
             new Ray(endOfBoid, -transform.right),           //  Left
-            new Ray(endOfBoid, transform.right),            //  Right
             new Ray(endOfBoid, transform.up),               //  Up
+            new Ray(endOfBoid, transform.right),            //  Right
             new Ray(endOfBoid, -transform.up)               //  Down
         };
 
-        if(Physics.Raycast(new Ray(endOfBoid, f), 10))  //  Checks that the forward direction is safe up to 10 meters
+        if(Physics.SphereCast(new Ray(endOfBoid, f), 1f, 7))  //  Checks that the forward direction is safe up to 10 meters
         {
+            StartCoroutine(ColorSwitch());
             for (int i = 0; i < 8; i++)
             {
                 //hitColor = Physics.Raycast(viewRays[i], out hits[i], 10f) ? Color.red : Color.green; Turn(viewRays[i].direction);
@@ -92,16 +95,17 @@ public class BoidScript : MonoBehaviour
                 }
             }
         }
+        
 
-        
-        
+
+
     }
 
-    void ObstacleAvoidance()
+    private void OnDrawGizmos()
     {
-
+        Gizmos.color = projectionColor;
+        Gizmos.DrawWireMesh(CreateBoidMesh(), this.transform.localPosition + this.transform.forward*10, this.transform.rotation);
     }
-
 
     //  Creates and returns a boid mesh
     //  Currently makes a pyramid like object
@@ -111,11 +115,11 @@ public class BoidScript : MonoBehaviour
 
         Vector3[] vert = new Vector3[]
         {
-            new Vector3(-.5f, 0, 0),
-            new Vector3(0, .25f, 0),
-            new Vector3(.5f, 0, 0),
-            new Vector3(0, -.25f, 0),
-            new Vector3(0, 0, 1)
+            new Vector3(-.5f, 0, -.5f),
+            new Vector3(0, .25f, -.5f),
+            new Vector3(.5f, 0, -.5f),
+            new Vector3(0, -.25f, -.5f),
+            new Vector3(0, 0, .5f)
         };
 
         int[] triang = new int[]
@@ -134,5 +138,12 @@ public class BoidScript : MonoBehaviour
         boidMesh.RecalculateNormals();
 
         return boidMesh;
+    }
+
+    IEnumerator ColorSwitch()
+    {
+        projectionColor = Color.red;
+        yield return new WaitForSeconds(.45f);
+        projectionColor = Color.white;
     }
 }
