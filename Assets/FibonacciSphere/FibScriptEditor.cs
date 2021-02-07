@@ -20,10 +20,10 @@ public class FibScriptEditor : Editor
 
         //Phyllotaxis Gen
         myTarget.Angle = EditorGUILayout.Slider("Angle", myTarget.Angle, 0.0f, 360.0f);
-        myTarget.C = EditorGUILayout.Slider("C", myTarget.C, 0.0f, 1.0f);
+        myTarget.C = EditorGUILayout.Slider("C", myTarget.C, 1.0f, 2.0f);
         myTarget.Count = EditorGUILayout.IntSlider("Count", myTarget.Count, 1, 500);
         myTarget.Mark = EditorGUILayout.IntField("Mark every: ", myTarget.Mark);
-        myTarget.Radius = EditorGUILayout.Slider("Radius", myTarget.Radius, 1f, 20f);
+        myTarget.Radius = EditorGUILayout.Slider("Radius", myTarget.Radius, 0f, 10f);
         if (GUILayout.Button("Gen Phyllotaxis"))
         {
             myTarget.GeneratePhyllotaxis();
@@ -31,6 +31,10 @@ public class FibScriptEditor : Editor
         if (GUILayout.Button("Gen Sphere"))
         {
             myTarget.GenerateSpherePhyllotaxis();
+        }
+        if(GUILayout.Button("Test Sphere"))
+        {
+            myTarget.TestSphere();
         }
     }
 }

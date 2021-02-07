@@ -94,32 +94,16 @@ public class FibScript : MonoBehaviour
         float x, y, z, theta, r;
         float a = (180f / (float)Count);
 
-        string finalAns = "";
-
         GameObject sphere;
         for (int n = 0; n < Count; n++)
         {
-            //if(n % Mark == 0)
-            //{
-            theta = n * Angle;
-            r = C * Mathf.Sqrt(n);
+            theta = n * Angle * Mathf.Deg2Rad;
+            float angle = (n * a) * Mathf.Deg2Rad;
+            float adjacent = Radius * Mathf.Cos(angle);
+            r = Mathf.Sin(angle) * Radius;
             x = r * Mathf.Cos(theta);
             y = r * Mathf.Sin(theta);
-            float angle = (n * a) * Mathf.Deg2Rad;
-            if(angle < 90)
-            {
-                float adjacent = Radius * Mathf.Cos(angle);
-                float opposite = Radius * Mathf.Cos(angle);
-                adjacent *= -1;
-                z = adjacent;
-            }
-            else
-            {
-                float adjacent = Radius * Mathf.Cos(angle);
-                float opposite = Radius * Mathf.Cos(angle);
-                z = adjacent;
-            }
-            finalAns += x + "," + y + "," + z + "  ";
+            z = (angle < 90) ? -adjacent : adjacent;
 
             sphere = Instantiate(sphereObject);
             sphere.transform.position = new Vector3(x, y, z);
@@ -127,31 +111,33 @@ public class FibScript : MonoBehaviour
             sphere.transform.localScale = new Vector3(scaleVal, scaleVal, scaleVal);
             sphere.transform.parent = this.transform;
             sphere.transform.name = n.ToString();
-            //}
-            //else
-            //{
-            //    theta = n * Angle;
-            //    r = C * Mathf.Sqrt(n);
-            //    x = r * Mathf.Cos(theta);
-            //    y = r * Mathf.Sin(theta);
-            //    z = (float)n / Count;
-            //    finalAns += x + "," + y + "," + z + "  ";
-
-            //    sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            //    sphere.transform.position = new Vector3(x, y, z);
-            //    float scaleVal = .075f;
-            //    sphere.transform.localScale = new Vector3(scaleVal, scaleVal, scaleVal);
-            //    sphere.transform.parent = this.transform;
-            //}
-
+            sphere.AddComponent<SphereDataScript>().SetValues(theta, r, angle, x, y, z);
         }
-        finalAns.TrimEnd(new char[] { ' ' });
-        print(finalAns);
+    }
+
+    public void TestSphere()
+    {
+        RemoveChildren();
+        float x, y, z;
+
+        GameObject sphere;
+        for(float i = 0.0f; i < 4; i = i + 0.1f)
+        {
+            float theta = i * Angle * Mathf.Deg2Rad;
+            x = Radius * Mathf.Cos(i);
+            y = Radius * Mathf.Sin(i);
+            z = Radius * Mathf.Cos(i);
+
+            sphere = Instantiate(sphereObject);
+            sphere.transform.position = new Vector3(x, y, z);
+            float scaleVal = .075f;
+            sphere.transform.localScale = new Vector3(scaleVal, scaleVal, scaleVal);
+            sphere.transform.parent = this.transform;
+        }
     }
 
     private void RemoveChildren()
     {
-        //Transform[] childTransforms = transform.GetComponentsInChildren<Transform>();
         int numChildren = transform.childCount;
         for(int i = 0; i < numChildren; i++)
         {
