@@ -1,2 +1,2 @@
 # BoidSanctuary
- Personal Implementation of Craig Reynolds "Boids"
+ Personal Implementation of Craig Reynolds' "Boids"
