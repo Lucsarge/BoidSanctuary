@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class FibScript : MonoBehaviour
@@ -94,6 +96,11 @@ public class FibScript : MonoBehaviour
         float x, y, z, theta, r;
         float a = (180f / (float)Count);
 
+        Vector3[] directions = new Vector3[Count];
+
+        // setup for writing the directions to a file
+        string altDirectionsStr = "";
+
         GameObject sphere;
         for (int n = 0; n < Count; n++)
         {
@@ -112,8 +119,41 @@ public class FibScript : MonoBehaviour
             sphere.transform.parent = this.transform;
             sphere.transform.name = n.ToString();
             sphere.AddComponent<SphereDataScript>().SetValues(theta, r, angle, x, y, z);
+
+            Vector3 altDirection = sphere.transform.position - this.transform.position;
+            print($"Vector to sphere {n}: {altDirection}");
+            directions[n] = altDirection;
+
+            // write to directions document
+            altDirectionsStr += $"new Vector3({altDirection.x}f, {altDirection.y}f, {altDirection.z}f),\n";
+        }
+
+        // if the directions were found and the directions.txt document is available write them to the file
+        if (File.Exists("Assets/FibonacciSphere/directions.txt")){
+            Debug.Log("directions.txt does exist, writing to file");
+            var sr = File.CreateText("Assets/FibonacciSphere/directions.txt");
+            sr.WriteLine(altDirectionsStr);
+            //sr.Write("Just a test");
+            sr.Close();
+        }
+        else{
+            Debug.Log("directions.txt doesn't exist");
+        }
+
+        //StartCoroutine(ShowDirections(directions));
+    }
+
+#region Debug Show Lines
+    float directionDisplayTime = 0.25f;
+
+    private IEnumerator ShowDirections(Vector3[] directions){
+        foreach (Vector3 direction in directions){
+            print($"tick: {direction}");
+            Debug.DrawRay(this.transform.position, direction, Color.blue, directionDisplayTime);
+            yield return new WaitForSeconds(directionDisplayTime);
         }
     }
+#endregion
 
     public void TestSphere()
     {
