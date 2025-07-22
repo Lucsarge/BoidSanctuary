@@ -214,7 +214,7 @@ public class BoidScript : MonoBehaviour
     private MeshFilter meshFilter;
     private Mesh boidMesh;
 
-    public float ViewDist = 7.0f;
+    public float ViewDist = 5.0f;
     Color hitColor = Color.green;
     Color projectionColor = Color.white;
 
@@ -233,17 +233,15 @@ public class BoidScript : MonoBehaviour
     {
         meshRenderer = GetComponent<MeshRenderer>();
         meshFilter = GetComponent<MeshFilter>();
-        //meshCollider = GetComponent<MeshCollider>();
         boidMesh = meshInstance;
         meshFilter.mesh = boidMesh;
-        //meshCollider.sharedMesh = boidMesh;
     }
 
     public void Move(float moveSpeed)
     {
         // Inch forward
         transform.Translate(this.transform.forward * moveSpeed * Time.deltaTime * moveSpeed, Space.World);
-        RegulateBoundaries();
+        //RegulateBoundaries();
     }
 
     private void RegulateBoundaries()
@@ -277,7 +275,8 @@ public class BoidScript : MonoBehaviour
     {
         Vector3 f = transform.forward;
 
-        bool isClear = !Physics.Raycast(new Ray(this.gameObject.transform.position, f), ViewDist);
+        RaycastHit hitInfo;
+        bool isClear = !Physics.SphereCast(this.transform.position, 1.0f, this.transform.forward, out hitInfo, ViewDist, 1 << 7);
         Debug.DrawRay(this.gameObject.transform.position, f * ViewDist, isClear ? Color.green : Color.red);
 
         return isClear;
@@ -336,5 +335,20 @@ public class BoidScript : MonoBehaviour
         projectionColor = newColor;
         yield return new WaitForSeconds(duration);
         projectionColor = Color.white; // returns to default color
+    }
+
+    [SerializeField]
+    private bool isViewRaysShowing = false;
+    void OnValidate()
+    {
+        if (isViewRaysShowing){
+            DisplayRays();
+        }
+    }
+
+    private void DisplayRays(){
+        for(int i = 0; i < BoidViewRays.ViewRays.Length; i++){
+            Debug.DrawLine(this.transform.position, BoidViewRays.ViewRays[i], (i > 800) ? Color.red : Color.green, 5.0f);
+        }
     }
 }
