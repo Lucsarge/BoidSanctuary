@@ -10,9 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 167830097041649872}
   - component: {fileID: 9081856958923425460}
+  - component: {fileID: 1026896884035198144}
   m_Layer: 0
   m_Name: Flock
-  m_TagString: Untagged
+  m_TagString: FlockManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,5 +43,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44f3731027158fe4080cc8462a17563a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isSimInProgress: 0
+  boidScripts: []
+  boidMesh: {fileID: 4300000, guid: dbc1a7daf3e184c48b4d34f02ce136dc, type: 2}
+  boidPrefab: {fileID: 8343136992504247522, guid: 5faa176c3af297b418c46a0a6fff7deb, type: 3}
+  isSteeringEnabled: 1
+  isAvoidanceEnabled: 1
+  obstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
+  boidMoveSpeed: 3
+  boidSeparationRadius: 10
+  separationStrength: 0.5
+  alignmentStrength: 0.5
+  coherenceStrength: 0.5
+--- !u!114 &1026896884035198144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3749763901292798453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8165d31a5e7b2534aaab2d46103f25cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

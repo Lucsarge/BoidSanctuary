@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - Boid
+  - FlockManager
+  - Environment
   layers:
   - Default
   - TransparentFX
