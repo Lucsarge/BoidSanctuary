@@ -218,17 +218,6 @@ public class BoidScript : MonoBehaviour
     Color hitColor = Color.green;
     Color projectionColor = Color.white;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    public void Update()
-    {
-        //print($"Current Rot: {this.transform.rotation}");
-    }
-
     public void InstantiateMesh(Mesh meshInstance)
     {
         meshRenderer = GetComponent<MeshRenderer>();
@@ -240,7 +229,7 @@ public class BoidScript : MonoBehaviour
     public void Move(float moveSpeed)
     {
         // Inch forward
-        transform.Translate(this.transform.forward * moveSpeed * Time.deltaTime * moveSpeed, Space.World);
+        transform.Translate(this.transform.forward * moveSpeed * Time.fixedDeltaTime * moveSpeed, Space.World);
         //RegulateBoundaries();
     }
 
