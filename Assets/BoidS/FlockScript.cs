@@ -109,8 +109,7 @@ public class FlockScript : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    private void FixedUpdate()
+    private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
@@ -123,7 +122,10 @@ public class FlockScript : MonoBehaviour
         {
             isSimInProgress = !isSimInProgress;
         }
+    }
 
+    private void FixedUpdate()
+    {
         if (isSimInProgress)
         {
             Simulate();
