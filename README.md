@@ -17,7 +17,7 @@ Main Components: `BoidScript`, `FlockScript`, `FibScript`
 
 The `FlockScript` is responsible for managing the overall simulation. It starts by gathering or creating the "Flock" (a collection of `Boid` prefabs/objects). The simulation is then performed per every `FixedUpdate` which is set to 0.0166 (roughly a 60 frame per second rate). The simulation adheres to steering behaviors, the various checks that are required for the Boid Algorithm: Separation, Alignment, Cohesion. On top of these steering behaviors the 
 
-[![Boid Simulation Video](https://raw.githubusercontent.com/Lucsarge/BoidSanctuary/main/Screenshots/Boid_Simulation_Screenshot.jpg)](https://raw.githubusercontent.com/Lucsarge/BoidSanctuary/main/Recordings/Boid_Simulation.mp4)
+https://github.com/user-attachments/assets/fbb3f1f2-d485-43c6-8d3d-484ceca65899
 
 ## Next Steps (Updated 7/30/2025)
 1. General code cleanup, there are a few portions of commented out code either from testing or a better solution was found and I failed to delete the old one. I also noticed when updating this ReadMe that a few functions that appeared to have no references to them, these are likely going to be handled under a "Boid refactor".
