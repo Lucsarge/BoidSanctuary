@@ -1,5 +1,9 @@
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
+using Unity.EditorCoroutines.Editor;
+using Unity.Mathematics;
+using System;
 
 public class FlockTool : EditorWindow
 {
@@ -34,6 +38,8 @@ public class FlockTool : EditorWindow
 
     [SerializeField]
     private bool didCameraPivotChange = false;
+
+    EditorCoroutine cameraAnimationCoroutine;
     #endregion
 
     #region Editor Window Functions
@@ -109,6 +115,19 @@ public class FlockTool : EditorWindow
             // update the camera position
             UpdateCameraState();
         }
+
+        if (GUILayout.Button("Animate Camera"))
+        {
+            cameraAnimationCoroutine = this.StartCoroutine(AnimateCamera());
+        }
+
+        if (GUILayout.Button("Stop Coroutine"))
+        {
+            if (cameraAnimationCoroutine != null)
+            {
+                this.StopCoroutine(cameraAnimationCoroutine);
+            }
+        }
     }
     #endregion
 
@@ -116,7 +135,6 @@ public class FlockTool : EditorWindow
     public void UpdateCameraState()
     {
         didCameraPivotChange = false;
-        Debug.Log("Updating camera state");
         switch (cameraState)
         {
             case CameraState.NORTH:
@@ -143,6 +161,25 @@ public class FlockTool : EditorWindow
         Vector3 relativePos = cameraTarget.position - cameraRef.transform.position;
         Quaternion rotation = Quaternion.LookRotation(relativePos, Vector3.up);
         cameraRef.transform.rotation = rotation;
+    }
+
+    private IEnumerator AnimateCamera()
+    {
+        const float totalTime = 8.0f;
+        float remainingSeconds = totalTime;
+        Debug.Log($"Start time: {DateTime.Now}");
+        while (remainingSeconds > 0.0f)
+        {
+            float t = 1 - (remainingSeconds / totalTime);
+            cameraRotateValue = math.lerp(0.0f, 360.0f, t);
+            cameraHeightValue = math.lerp(0.0f, 10.0f, t);
+            UpdateCameraState();
+
+            remainingSeconds -= Time.deltaTime;
+
+            yield return new WaitForEndOfFrame();
+        }
+        Debug.Log($"End time: {DateTime.Now}");
     }
     #endregion
 }
